@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: curl -fsSL https://raw.githubusercontent.com/gerrkoff/coding-standards/main/.gerrkoff/init.sh | bash
+# Usage: curl -fsSL "https://raw.githubusercontent.com/gerrkoff/coding-standards/main/.gerrkoff/init.sh?$(date +%s)" | bash
 
 set -e
 
@@ -29,7 +29,16 @@ copy_directory() {
 
   if [ -d "$source_path" ]; then
     mkdir -p "$target_dir"
-    cp -rf "$source_path/." "$target_dir/"
+
+    # Use rsync if available for better handling of self-copy scenarios
+    if command -v rsync &> /dev/null; then
+      rsync -a --exclude='.git' "$source_path/" "$target_dir/" 2>/dev/null || true
+    else
+      # Fallback to cp, but check if source and target are different
+      if [ "$(cd "$source_path" && pwd)" != "$(cd "$target_dir" && pwd)" ]; then
+        cp -rf "$source_path/." "$target_dir/"
+      fi
+    fi
 
     if [ -d "$target_dir" ]; then
       echo "✅ $dir_name synced"
@@ -40,9 +49,6 @@ copy_directory() {
     echo "❌ Failed to find $source_path in repository"
   fi
 }
-
-# When script is piped from curl, we're already in the target directory
-# No need to change directory
 
 for dir in "${DIRECTORIES[@]}"; do
   copy_directory "$dir" "$dir"
