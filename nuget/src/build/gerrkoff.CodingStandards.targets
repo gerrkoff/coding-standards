@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <_StandardsPath>$(MSBuildThisFileDirectory)../files</_StandardsPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Include="$(_StandardsPath)/FileDefaults.editorconfig" />
+    <EditorConfigFiles Include="$(_StandardsPath)/CodeStyle.editorconfig" />
+    <EditorConfigFiles Include="$(_StandardsPath)/analyzers/*.editorconfig" />
+    <EditorConfigFiles Include="$(_StandardsPath)/TestProjectsAnalyzers.editorconfig" Condition="'$(IsTestProject)' == 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(_StandardsPath)/BannedSymbols.txt" Visible="false" />
+  </ItemGroup>
+</Project>

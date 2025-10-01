@@ -1,0 +1,7 @@
+# NuGet packages
+*.nupkg
+*.snupkg
+
+# Temporary files
+*.tmp
+*.temp

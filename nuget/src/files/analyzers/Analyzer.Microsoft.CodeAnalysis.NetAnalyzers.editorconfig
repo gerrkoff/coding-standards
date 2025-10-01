@@ -1,0 +1,19 @@
+is_global = true
+global_level = 0
+
+# Missing XML comment for publicly visible type or member 'Type_or_Member'
+dotnet_diagnostic.CS1591.severity = none
+# Identifiers should not match keywords
+dotnet_code_quality.CA1716.analyzed_symbol_kinds = NamedType,Method,Property,Event,Parameter # Namespace
+# Dispose objects before losing scope
+dotnet_code_quality.CA2000.excluded_symbol_names = HttpClient
+# Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+# Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
+# Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = none
+# Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = none
+# Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none

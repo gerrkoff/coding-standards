@@ -1,0 +1,9 @@
+is_global = true
+global_level = 0
+
+# Implement IDisposable Correctly
+dotnet_diagnostic.CA1063.severity = none
+# Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+# Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = none
