@@ -16,6 +16,7 @@ echo "🚀 Initializing environment from $REPO_URL"
 copy_directory() {
   local dir_name=$1
   local source_path=$2
+  local target_dir="$PWD/$dir_name"
 
   echo "📦 Syncing $dir_name..."
 
@@ -26,12 +27,11 @@ copy_directory() {
   cd temp-repo
   git sparse-checkout set "$source_path"
 
-  cd "$OLDPWD"
-  if [ -d "temp-repo/$source_path" ]; then
-    mkdir -p "../$dir_name"
-    cp -rf "temp-repo/$source_path/." "../$dir_name/"
+  if [ -d "$source_path" ]; then
+    mkdir -p "$target_dir"
+    cp -rf "$source_path/." "$target_dir/"
 
-    if [ -d "../$dir_name" ]; then
+    if [ -d "$target_dir" ]; then
       echo "✅ $dir_name synced"
     else
       echo "❌ Failed to sync $dir_name"
@@ -41,7 +41,8 @@ copy_directory() {
   fi
 }
 
-cd "$(dirname "$0")/.." 2>/dev/null || true
+# When script is piped from curl, we're already in the target directory
+# No need to change directory
 
 for dir in "${DIRECTORIES[@]}"; do
   copy_directory "$dir" "$dir"
