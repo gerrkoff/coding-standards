@@ -32,21 +32,28 @@ copy_directory() {
 
     # Use rsync if available for better handling of self-copy scenarios
     if command -v rsync &> /dev/null; then
-      rsync -a --exclude='.git' "$source_path/" "$target_dir/" 2>/dev/null || true
+      if rsync -a --exclude='.git' "$source_path/" "$target_dir/"; then
+        echo "✅ $dir_name synced"
+      else
+        echo "❌ Failed to sync $dir_name with rsync"
+        return 1
+      fi
     else
       # Fallback to cp, but check if source and target are different
       if [ "$(cd "$source_path" && pwd)" != "$(cd "$target_dir" && pwd)" ]; then
-        cp -rf "$source_path/." "$target_dir/"
+        if cp -rf "$source_path/." "$target_dir/"; then
+          echo "✅ $dir_name synced"
+        else
+          echo "❌ Failed to sync $dir_name with cp"
+          return 1
+        fi
+      else
+        echo "⚠️  Source and target are the same, skipping $dir_name"
       fi
-    fi
-
-    if [ -d "$target_dir" ]; then
-      echo "✅ $dir_name synced"
-    else
-      echo "❌ Failed to sync $dir_name"
     fi
   else
     echo "❌ Failed to find $source_path in repository"
+    return 1
   fi
 }
 
