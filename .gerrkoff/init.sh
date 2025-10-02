@@ -5,6 +5,7 @@ set -e
 
 REPO_URL="https://github.com/gerrkoff/coding-standards"
 TEMP_DIR=$(mktemp -d)
+TARGET_DIR="$PWD"
 
 DIRECTORIES=(
   ".devcontainer"
@@ -16,7 +17,7 @@ echo "🚀 Initializing environment from $REPO_URL"
 copy_directory() {
   local dir_name=$1
   local source_path=$2
-  local target_dir="$PWD/$dir_name"
+  local target_dir="$TARGET_DIR/$dir_name"
 
   echo "📦 Syncing $dir_name..."
 
@@ -30,7 +31,6 @@ copy_directory() {
   if [ -d "$source_path" ]; then
     mkdir -p "$target_dir"
 
-    # Use rsync if available for better handling of self-copy scenarios
     if command -v rsync &> /dev/null; then
       if rsync -a --exclude='.git' "$source_path/" "$target_dir/"; then
         echo "✅ $dir_name synced"
@@ -39,7 +39,6 @@ copy_directory() {
         return 1
       fi
     else
-      # Fallback to cp, but check if source and target are different
       if [ "$(cd "$source_path" && pwd)" != "$(cd "$target_dir" && pwd)" ]; then
         if cp -rf "$source_path/." "$target_dir/"; then
           echo "✅ $dir_name synced"
