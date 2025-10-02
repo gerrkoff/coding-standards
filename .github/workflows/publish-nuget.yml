@@ -29,5 +29,16 @@ jobs:
     - name: Pack NuGet package
       run: nuget pack nuget/gerrkoff.CodingStandards.nuspec -OutputDirectory ./nupkg
 
+    - name: Extract package version
+      id: package_version
+      run: |
+        PACKAGE_FILE=$(ls ./nupkg/*.nupkg | head -n 1)
+        VERSION=$(basename $PACKAGE_FILE | sed 's/gerrkoff.CodingStandards.\(.*\).nupkg/\1/')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Package version: $VERSION"
+
     - name: Publish to NuGet.org
       run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+    - name: Unlist package from search
+      run: dotnet nuget delete gerrkoff.CodingStandards ${{ steps.package_version.outputs.version }} --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --non-interactive
