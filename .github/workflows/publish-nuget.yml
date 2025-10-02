@@ -40,5 +40,5 @@ jobs:
     - name: Publish to NuGet.org
       run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
-    - name: Unlist package from search
-      run: dotnet nuget delete gerrkoff.CodingStandards ${{ steps.package_version.outputs.version }} --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --non-interactive
+    # - name: Unlist package from search
+    #   run: dotnet nuget delete gerrkoff.CodingStandards ${{ steps.package_version.outputs.version }} --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --non-interactive
